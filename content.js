@@ -207,10 +207,12 @@
   document.addEventListener('mousedown', e => { if (!combo.contains(e.target)) sugg.hidden = true; });
 
   // ---------- card ----------
-  function renderStage(ui, d) {
+  function renderStage(ui, d, multi) {
     let tipo = ui.tipo_tramite || d.tipo_tramite || '';
     if (ui.tipo_dni === 'EXPRESS') tipo += ' Exprés';
     if (ui.tipo_dni === '24') tipo += ' 24hs';
+    // the type is already in the card header; repeat it only to tell several stages apart or flag express/24h
+    const showType = multi || ui.tipo_dni === 'EXPRESS' || ui.tipo_dni === '24';
     const color = ui.class_panel_color || '';
 
     const panel = el('div', { className: 'panel' },
@@ -240,7 +242,7 @@
     }
 
     return el('div', { className: 'sub' },
-      el('span', { className: 'meta', textContent: tipo }),
+      showType ? el('span', { className: 'meta', textContent: tipo }) : null,
       ui.svg && el('img', { className: 'steps', src: `img/svg/${ui.svg}`, alt: ui.texto_front || '' }),
       panel,
     );
@@ -290,7 +292,8 @@
       ),
       renderSummary(d),
     );
-    (d.tramitesUI || []).slice(0, 2).forEach(ui => card.append(renderStage(ui, d)));
+    const stages = (d.tramitesUI || []).slice(0, 2);
+    stages.forEach(ui => card.append(renderStage(ui, d, stages.length > 1)));
     return { card, status };
   }
 
