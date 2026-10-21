@@ -4,6 +4,15 @@ Chrome extension that restores the trámite status lookup form on https://mitram
 
 **Not affiliated with, endorsed by or connected to RENAPER or the Argentine government.**
 
+## Install from ZIP
+
+1. Download `mitramite-form-<version>.zip` from the [latest release](https://github.com/vanekt/mitramite-form/releases/latest) and unzip it into a folder you will keep (do not delete or move it afterwards).
+2. Open `chrome://extensions` and enable **Developer mode**.
+3. Click **Load unpacked** and select the unzipped folder.
+4. Open https://mitramite.renaper.gob.ar/ and enter a trámite number.
+
+Works in Chrome 111+ and other Chromium-based browsers. Chrome may show a "disable developer mode extensions" notice on startup, and extensions installed this way do not update automatically.
+
 ## Install (from source)
 
 1. Open `chrome://extensions` and enable **Developer mode**.

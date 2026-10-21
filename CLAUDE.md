@@ -10,7 +10,7 @@ A Manifest V3 Chrome extension that restores the trámite status lookup form on 
 
 - Syntax check: `node --check content.js`
 - Install/reload: `chrome://extensions` → Developer mode → "Load unpacked" → this folder; press the reload icon after every edit, then reload the page.
-- Package for the Chrome Web Store: `mkdir -p dist && rm -f dist/mitramite-form.zip && zip -q -r dist/mitramite-form.zip manifest.json content.js icons -x '*.DS_Store'` (`dist/` is git-ignored; keep `.git`, `sources/` and `CLAUDE.md` out of the zip).
+- Package for the Chrome Web Store: `V=$(sed -n 's/.*"version": "\(.*\)".*/\1/p' manifest.json) && mkdir -p dist && rm -f dist/mitramite-form-$V.zip && zip -q -r dist/mitramite-form-$V.zip manifest.json content.js icons -x '*.DS_Store'` (`dist/` is git-ignored; keep `.git`, `sources/` and `CLAUDE.md` out of the zip). The same zip is uploaded to the Web Store and attached to GitHub Releases (tag `v<version>`).
 - Live check without installing: the `chrome-devtools` MCP server (project-local config) can open the site; navigate to it, then run `content.js` in the page with `evaluate_script` (`sourcePath` + `format: "script"`). The script is idempotent-guarded by `#mm-restore`, so reload the page before re-injecting.
 
 The target site is unreachable from some networks (curl times out); use the browser tooling instead.
