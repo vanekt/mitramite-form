@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Mitramite Form Restore",
+  "version": "0.1.0",
+  "description": "Restores the trámite status lookup form on mitramite.renaper.gob.ar",
+  "content_scripts": [
+    {
+      "matches": ["https://mitramite.renaper.gob.ar/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle",
+      "world": "MAIN"
+    }
+  ]
+}
