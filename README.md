@@ -1,30 +1,40 @@
 # Unofficial Mitramite Status Form
 
-Chrome extension that restores the trámite status lookup form on https://mitramite.renaper.gob.ar/. The site's own form is no longer rendered, but its `busqueda.php` API still works; this extension adds a form back and shows the stage progress, current status and history from the API response.
+**EN** | [ES](README-ES.md) | [RU](README-RU.md)
+
+**Install the extension, open https://mitramite.renaper.gob.ar/, and the lookup form is back.**
+
+Chrome extension that restores the trámite status lookup form on https://mitramite.renaper.gob.ar/. The site's own form is no longer displayed, but its status service still works; this extension adds the form back and shows the stage progress, current status and tracking history.
 
 **Not affiliated with, endorsed by or connected to RENAPER or the Argentine government.**
 
+![Screenshot](docs/screenshot.jpg)
+
+## Features
+
+- Lookup form on the page: enter a trámite number and see its status.
+- Progress stages (Inicio, Verificación, Producción, Embalaje, Correo), current and previous status, delivery method, office and filing date.
+- Full tracking history, including postal service events.
+- Remembers the numbers you looked up and suggests them when you focus the field; nothing is requested until you pick one.
+- One-click refresh, responsive layout for small windows.
+- The interface is in Spanish, like the site.
+
 ## Install
 
-[**Install from the Chrome Web Store**](https://chromewebstore.google.com/detail/unofficial-mitramite-stat/afjbckgljnnaimdckbgaigfjnnmlobai), or use one of the manual options below.
+[**Install from the Chrome Web Store**](https://chromewebstore.google.com/detail/unofficial-mitramite-stat/afjbckgljnnaimdckbgaigfjnnmlobai), or install it manually from a ZIP below.
 
-## Install from ZIP
+### From ZIP
 
 1. Download `mitramite-form-<version>.zip` from the [latest release](https://github.com/vanekt/mitramite-form/releases/latest) and unzip it into a folder you will keep (do not delete or move it afterwards).
 2. Open `chrome://extensions` and enable **Developer mode**.
 3. Click **Load unpacked** and select the unzipped folder.
-4. Open https://mitramite.renaper.gob.ar/ and enter a trámite number.
 
 Works in Chrome 111+ and other Chromium-based browsers. Chrome may show a "disable developer mode extensions" notice on startup, and extensions installed this way do not update automatically.
 
-## Install (from source)
+## Usage
 
-1. Open `chrome://extensions` and enable **Developer mode**.
-2. Click **Load unpacked** and select this folder.
-3. Open https://mitramite.renaper.gob.ar/ and enter a trámite number.
+Install the extension, then open https://mitramite.renaper.gob.ar/, enter a trámite number and press the button.
 
-Saved case numbers are kept only in your browser's local storage. See [PRIVACY.md](PRIVACY.md).
+## Privacy
 
-## Development
-
-No build step. Edit `content.js`, run `node --check content.js`, then reload the extension on `chrome://extensions` and refresh the page.
+The extension sends the number you enter to the site's own status service, exactly as the original form did, and collects nothing else. Saved numbers stay in your browser's local storage on that site and can be removed from the suggestions list. See [PRIVACY.md](PRIVACY.md).
