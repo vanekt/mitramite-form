@@ -10,7 +10,7 @@ A Manifest V3 Chrome extension that restores the trámite status lookup form on 
 
 - Syntax check: `node --check content.js`
 - Install/reload: `chrome://extensions` → Developer mode → "Load unpacked" → this folder; press the reload icon after every edit, then reload the page.
-- Package for the Chrome Web Store: `V=$(sed -n 's/.*"version": "\(.*\)".*/\1/p' manifest.json) && mkdir -p dist && rm -f dist/mitramite-form-$V.zip && zip -q -r dist/mitramite-form-$V.zip manifest.json content.js icons -x '*.DS_Store'` (`dist/` is git-ignored; keep `.git`, `sources/` and `CLAUDE.md` out of the zip). The same zip is uploaded to the Web Store and attached to GitHub Releases (tag `v<version>`).
+- Package for the Chrome Web Store: `V=$(sed -n 's/.*"version": "\(.*\)".*/\1/p' manifest.json) && mkdir -p dist && rm -f dist/mitramite-form-$V.zip && zip -q -r dist/mitramite-form-$V.zip manifest.json content.js icons _locales -x '*.DS_Store'` (`dist/` is git-ignored; keep `.git`, `sources/`, `docs/` and `CLAUDE.md` out of the zip). The same zip is uploaded to the Web Store and attached to GitHub Releases (tag `v<version>`).
 - Live check without installing: the `chrome-devtools` MCP server (project-local config) can open the site; navigate to it, then run `content.js` in the page with `evaluate_script` (`sourcePath` + `format: "script"`). The script is idempotent-guarded by `#mm-restore`, so reload the page before re-injecting.
 
 The target site is unreachable from some networks (curl times out); use the browser tooling instead.
@@ -30,7 +30,8 @@ The target site is unreachable from some networks (curl times out); use the brow
 
 ## Repo notes
 
-- `manifest.json` needs `minimum_chrome_version` 111 because of `"world": "MAIN"`. The extension name keeps the "Unofficial" prefix and the description says it is not affiliated with RENAPER; keep that wording, and don't use RENAPER/government logos or crests (impersonation risk on the Web Store).
+- `manifest.json` needs `minimum_chrome_version` 111 because of `"world": "MAIN"`. `name` and `description` come from `_locales/{en,es,ru}/messages.json` (`default_locale` is `en`) so the Web Store and `chrome://extensions` show them in the user's language; the in-page UI text stays Spanish and is not part of `_locales`. In every locale the name must keep the "unofficial" wording and the description must say it is not affiliated with RENAPER; don't use RENAPER/government logos or crests (impersonation risk on the Web Store). Chrome's Spanish UI locale `es_419` falls back to `es`.
 - `icons/` holds PNGs (16/48/128) in the site's header blue `#37bbed`; there is no generator script in the repo.
 - `PRIVACY.md` is linked from the Web Store listing (`https://github.com/vanekt/mitramite-form/blob/main/PRIVACY.md`); update it if the extension starts storing or sending anything new.
 - `sources/` (git-ignored) holds a local copy of the original site's `main.js` and `index.html` for reference only; it is third-party code and must not be committed.
+- Commits: never add a `Co-Authored-By` trailer or any other Claude attribution line to commit messages (the owner asked for this explicitly). Commit and push only when asked.

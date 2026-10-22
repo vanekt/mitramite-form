@@ -1,0 +1,10 @@
+{
+  "extName": {
+    "message": "Consulta de trámite Mitramite RENAPER (no oficial)",
+    "description": "Extension name shown in the Chrome Web Store and chrome://extensions. Keep the 'unofficial' wording."
+  },
+  "extDescription": {
+    "message": "Restaura el formulario de consulta de trámites en mitramite.renaper.gob.ar. Desarrollo independiente, sin relación con el RENAPER.",
+    "description": "Short description (max 132 chars). Must state the extension is unofficial and not affiliated with RENAPER."
+  }
+}

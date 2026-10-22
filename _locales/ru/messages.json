@@ -1,0 +1,10 @@
+{
+  "extName": {
+    "message": "Mitramite RENAPER: форма статуса заявки (неофициально)",
+    "description": "Extension name shown in the Chrome Web Store and chrome://extensions. Keep the 'unofficial' wording."
+  },
+  "extDescription": {
+    "message": "Возвращает форму проверки статуса заявки на mitramite.renaper.gob.ar. Сделано независимым разработчиком, не связано с RENAPER.",
+    "description": "Short description (max 132 chars). Must state the extension is unofficial and not affiliated with RENAPER."
+  }
+}

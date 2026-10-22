@@ -1,0 +1,10 @@
+{
+  "extName": {
+    "message": "Unofficial Mitramite RENAPER Status Form",
+    "description": "Extension name shown in the Chrome Web Store and chrome://extensions. Keep the 'unofficial' wording."
+  },
+  "extDescription": {
+    "message": "Restores the trámite status lookup form on mitramite.renaper.gob.ar. Made by an independent developer, not affiliated with RENAPER.",
+    "description": "Short description (max 132 chars). Must state the extension is unofficial and not affiliated with RENAPER."
+  }
+}
