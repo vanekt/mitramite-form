@@ -228,10 +228,12 @@
     const hist = ui.historico || [];
     if (hist.length) {
       const ul = el('ul', { className: 'tl' });
-      hist.forEach(h => ul.append(el('li', {},
-        el('time', { textContent: h.FechaCambio || h.fecha || '' }),
-        String(h.EstadoMotivo || h.evento || '').replace('/Sin Motivo', ''),
-      )));
+      hist.forEach(h => {
+        // events may contain markup, e.g. "INTENTO DE ENTREGA (<b>ENTREGADO</b>)"; the original site rendered them as HTML
+        const event = el('span');
+        event.innerHTML = safeHtml(String(h.EstadoMotivo || h.evento || '').replace('/Sin Motivo', ''));
+        ul.append(el('li', {}, el('time', { textContent: h.FechaCambio || h.fecha || '' }), event));
+      });
       const box = el('div', { className: `histbox ${color}`.trim() }, ul);
       const label = `${t.history} ${(ui.texto_front || '').toLowerCase()}`.trim();
       const link = el('button', { type: 'button', className: 'histlink' });
