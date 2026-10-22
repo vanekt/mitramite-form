@@ -4,6 +4,10 @@ Chrome extension that restores the trámite status lookup form on https://mitram
 
 **Not affiliated with, endorsed by or connected to RENAPER or the Argentine government.**
 
+## Install
+
+[**Install from the Chrome Web Store**](https://chromewebstore.google.com/detail/unofficial-mitramite-stat/afjbckgljnnaimdckbgaigfjnnmlobai), or use one of the manual options below.
+
 ## Install from ZIP
 
 1. Download `mitramite-form-<version>.zip` from the [latest release](https://github.com/vanekt/mitramite-form/releases/latest) and unzip it into a folder you will keep (do not delete or move it afterwards).
