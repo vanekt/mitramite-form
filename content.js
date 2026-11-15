@@ -5,6 +5,7 @@
   const LAST_KEY = 'mm-restore-last'; // case number -> last known status, shown in the suggestions
   const HOST_SELECTORS = ['body > main > div:nth-child(1) > div', 'main', 'body'];
   const REFRESH_ICON = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>';
+  const CHEVRON_ICON = '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
   // special states the original site shows as a plain message instead of the progress view
   const TT_CPI = 24;
   const TT_MIGRACIONES = 111;
@@ -18,6 +19,7 @@
     confirmDelete: n => `¿Quitar el trámite #${n} de la lista?`, removeTitle: 'Quitar de la lista',
     refresh: 'Actualizar', loading: 'Cargando…', error: 'ERROR',
     status: 'Estado', previous: 'Anterior', delivery: 'Entrega', office: 'Oficina', filed: 'Iniciado', history: 'Historial',
+    jsonLink: 'API JSON',
     cpi: 'Iniciaste un trámite para obtener el Certificado de Pre-identificación. Para saber el estado, escribí por WhatsApp al 11-5805-8813 con tu nombre y apellido o N° de ID trámite.',
     migraciones: 'Migraciones está analizando tu trámite.',
     suspendido: 'Tu trámite se encuentra suspendido porque tenés la radicación vencida o próxima a vencer. Acercate a Migraciones para regularizar la situación.',
@@ -102,7 +104,7 @@
   #mm-restore dl.sum dd.cur{font-weight:700}
   #mm-restore .steps{display:block;width:100%;max-width:620px;height:auto;margin:12px 0}
   #mm-restore .sub{margin-top:14px;padding-top:6px;border-top:1px dashed #d5dde3}
-  #mm-restore .panel{padding:14px 16px;border:1px solid #d5dde3;border-radius:12px;background:#fff}
+  #mm-restore .stagebox{padding:14px 16px;border:1px solid #d5dde3;border-radius:12px;background:#fff}
   #mm-restore .state{display:flex;gap:12px;align-items:center;padding-bottom:12px;border-bottom:1px solid #e4e9ed;font-size:20px;font-weight:500}
   #mm-restore .state img{width:30px;height:30px}
   #mm-restore .info{margin-top:16px;padding:12px;border-radius:8px;background:#e3f2fa}
@@ -116,6 +118,26 @@
   #mm-restore ul.tl{margin:0;padding:0 0 0 18px;list-style:square;font-size:13px}
   #mm-restore ul.tl li{padding:2px 0}
   #mm-restore ul.tl time{font-style:italic;margin-right:8px}
+  #mm-restore .tools{display:flex;justify-content:flex-end;gap:14px;margin-top:10px}
+  #mm-restore .toollink{padding:0;border:0;background:none;color:#6b7885;font:inherit;font-size:12px;text-decoration:underline dotted;cursor:pointer}
+  #mm-restore .toollink:hover,#mm-restore .toollink[aria-expanded=true]{color:#1f2933}
+  #mm-restore .toolpanel{margin-top:8px}
+  #mm-restore .toolpanel[hidden]{display:none}
+  #mm-restore .json{max-height:420px;overflow:auto;padding:12px;border-radius:8px;background:#1f2933;color:#e4e9ed;font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
+  #mm-restore .json .jh{position:relative;padding-left:14px;cursor:pointer}
+  #mm-restore .json .ja{position:absolute;left:0;top:50%;width:11px;height:11px;margin-top:-5.5px;color:#64748b}
+  #mm-restore .json .ja svg{display:block;transition:transform .15s ease}
+  #mm-restore .json .jw.open>.jh .ja svg{transform:rotate(90deg)}
+  #mm-restore .json .jh:hover .ja{color:#e4e9ed}
+  #mm-restore .json .jc{padding-left:18px}
+  #mm-restore .json .jl{padding-left:14px}
+  #mm-restore .json .jp{color:#94a3b8}
+  #mm-restore .json .jw:not(.open)>.jc,#mm-restore .json .jw:not(.open)>.jl{display:none}
+  #mm-restore .json .jw.open>.jh .jp{display:none}
+  #mm-restore .jk{color:#7dd3fc}
+  #mm-restore .js{color:#a7f3d0}
+  #mm-restore .jn{color:#fcd34d}
+  #mm-restore .jb{color:#f9a8d4}
   @media(max-width:600px){
     #mm-restore{margin:16px auto;padding:0 12px}
     #mm-restore form{flex-direction:column}
@@ -126,7 +148,7 @@
     #mm-restore dl.sum dt{font-size:12px}
     #mm-restore dl.sum dd{margin-bottom:8px;overflow-wrap:anywhere}
     #mm-restore dl.sum dd:last-child{margin-bottom:0}
-    #mm-restore .panel{padding:12px}
+    #mm-restore .stagebox{padding:12px}
     #mm-restore .state{font-size:18px}
     #mm-restore .body,#mm-restore .histbox{padding:12px}
   }
@@ -215,7 +237,7 @@
     const showType = multi || ui.tipo_dni === 'EXPRESS' || ui.tipo_dni === '24';
     const color = ui.class_panel_color || '';
 
-    const panel = el('div', { className: 'panel' },
+    const panel = el('div', { className: 'stagebox' },
       el('div', { className: 'state' },
         ui.icon && el('img', { src: `img/iconos/iconos-caja/${ui.icon}`, alt: '' }),
         ui.texto_front || ''),
@@ -277,8 +299,59 @@
   const renderErr = (num, msg) => el('div', { className: 'card err' },
     el('div', { className: 'head' }, el('span', { className: 'num', textContent: `#${num} ${t.error}: ` }), String(msg)));
 
-  // returns { card, status }; status is set only when the trámite was found
+  // collapsible JSON tree (like the browser console); built from text nodes only, so nothing from the response is parsed as HTML
+  function jsonNode(key, value, depth) {
+    const label = key === null ? [] : [
+      typeof key === 'number' ? el('span', { className: 'jn', textContent: String(key) }) : el('span', { className: 'jk', textContent: JSON.stringify(key) }),
+      ': ',
+    ];
+    if (value === null || typeof value !== 'object') {
+      const cls = typeof value === 'string' ? 'js' : typeof value === 'number' ? 'jn' : 'jb';
+      return el('div', { className: 'jl' }, ...label, el('span', { className: cls, textContent: JSON.stringify(value) }));
+    }
+    const isArray = Array.isArray(value);
+    const entries = isArray ? value.map((v, i) => [i, v]) : Object.entries(value);
+    const [open, close] = isArray ? ['[', ']'] : ['{', '}'];
+    if (!entries.length) return el('div', { className: 'jl' }, ...label, open + close);
+    const preview = el('span', { className: 'jp', textContent: isArray ? `${entries.length} items ${close}` : `${entries.map(e => e[0]).slice(0, 4).join(', ')}${entries.length > 4 ? ', …' : ''} ${close}` });
+    const arrow = el('span', { className: 'ja' });
+    arrow.innerHTML = CHEVRON_ICON;
+    const head = el('div', { className: 'jh' }, arrow, ...label, open, ' ', preview);
+    const node = el('div', { className: 'jw' }, head,
+      el('div', { className: 'jc' }, ...entries.map(([k, v]) => jsonNode(k, v, depth + 1))),
+      el('div', { className: 'jl' }, close));
+    const setOpen = on => node.classList.toggle('open', on);
+    head.onclick = () => setOpen(!node.classList.contains('open'));
+    setOpen(depth < 2);
+    return node;
+  }
+
+  function renderJson(value) {
+    return el('div', { className: 'json' }, jsonNode(null, value, 0));
+  }
+
+  // small link under the card that expands the raw API response (pretty-printed JSON)
+  function renderTools(resp) {
+    const link = el('button', { type: 'button', className: 'toollink', textContent: t.jsonLink });
+    link.setAttribute('aria-expanded', 'false');
+    const panel = el('div', { className: 'toolpanel', hidden: true });
+    link.onclick = () => {
+      const open = panel.hidden;
+      panel.hidden = !open;
+      link.setAttribute('aria-expanded', String(open));
+      if (open) panel.replaceChildren(renderJson(resp));
+    };
+    return [el('div', { className: 'tools' }, link), panel];
+  }
+
   function renderOk(num, resp) {
+    const result = renderCase(num, resp);
+    result.card.append(...renderTools(resp));
+    return result;
+  }
+
+  // returns { card, status }; status is set only when the trámite was found
+  function renderCase(num, resp) {
     if (resp.errors) return { card: renderErr(num, resp.errors.title || JSON.stringify(resp.errors)) };
     const d = resp.data;
     if (!d) return { card: renderErr(num, resp.mensaje || JSON.stringify(resp)) };
